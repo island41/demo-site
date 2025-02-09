@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>梅長蘇個人網頁</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='contact.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        function submitForm(event) {
+            event.preventDefault(); // 防止表單的默認提交行為
+
+            // 獲取表單資料
+            const title = document.getElementById('title_text').value;
+            const content = document.getElementById('content_text').value;
+
+            // 驗證表單資料
+            if (!title || !content) {
+                alert('主旨與內容皆為必填');
+                return;
+            }
+
+            // 使用 Axios 發送 POST 請求
+            axios.post('/submit-contact-message', {
+                title: title,
+                content: content
+            })
+            .then(response => {
+                alert(response.data); // 顯示後端返回的訊息
+            })
+            .catch(error => {
+                if (error.response) {
+                    alert(`錯誤: ${error.response.data.message || '提交失敗'}`);
+                } else {
+                    alert('提交失敗，請稍後再試！');
+                }
+                console.error('提交錯誤:', error);
+            });
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>梅長蘇個人網頁</h1>
+        <nav>
+            <ul class="nav">
+                <li><a href="/">Home</a></li>
+                <li><a href="/to-do-list">to-do-list</a></li>
+                <li><a href="/resume">梅長蘇簡歷</a></li>
+                <li><a href="/contact">留言給梅長蘇</a></li>
+                <li><a href="/rwd_sample">切換不同裝置</a></li>
+                <li><a href="https://kh934124.neocities.org/2025.pdf" download="2025.pdf" target="_blank" onclick="alert('感謝您的下載！')">下載2025行事曆 PDF</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="contact-container">
+            <h2>聯絡我</h2>
+            <div class="form-group">
+                <label for="title_text">主旨:</label>
+                <input id="title_text" type="text" required />
+            </div>
+            <div class="form-group">
+                <label for="content_text">內容:</label>
+                <textarea id="content_text" required></textarea>
+            </div>
+            <div class="form-group">
+                <button class="submit-btn" type="submit" onclick="submitForm(event)">送出</button>
+            </div>
+        </div>
+    </main>
+    <footer>© 2024 Your Website</footer>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
